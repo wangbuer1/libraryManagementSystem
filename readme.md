@@ -63,7 +63,7 @@
 
 ## 5、视频演示
 
-[点击播放视频，视频位于文章最后](输入链接)
+[点击播放视频，视频位于文章最后](https://mp.weixin.qq.com/s/N4ZBCGCYag8Fu5BzwFlglg)
 
 ## 6、获取方式
 
