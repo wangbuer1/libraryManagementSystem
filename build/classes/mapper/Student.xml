@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="StudentMapper">
+
+    <resultMap id="BaseResultMap" type="main.dao.domain.Student">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="sno" property="sno" jdbcType="VARCHAR"/>
+        <result column="sname" property="sname" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="cdate" property="cdate" jdbcType="TIMESTAMP"/>
+        <result column="udate" property="udate" jdbcType="TIMESTAMP"/>
+        <result column="yn" property="yn" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumnList">
+
+    </sql>
+
+    <insert id="insert" parameterType="main.dao.domain.Student">
+        INSERT INTO library_student (
+            sno,
+            sname,
+            password,
+            cdate,
+            yn
+        )VALUES(
+            #{sno,jdbcType=VARCHAR},
+            #{sname,jdbcType=VARCHAR},
+            #{password,jdbcType=VARCHAR},
+            now(),
+            1
+        );
+    </insert>
+
+    <update id="update" parameterType="main.dao.domain.Student">
+        UPDATE library_student
+        SET
+            sname = #{sname,jdbcType=VARCHAR},
+            password = #{password,jdbcType=VARCHAR},
+            udate = now()
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="delete" parameterType="main.dao.domain.Student">
+        UPDATE library_student
+        SET
+            udate = now(),
+            yn = 0
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="main.dao.domain.Student">
+        select
+            id, sno, sname, password, cdate, udate, yn
+        from
+            library_student
+        where
+            yn = 1
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="sno != null and sno != ''">
+                and sno = #{sno}
+            </if>
+            <if test="sname != null and sname != ''">
+                and sname = #{sname,jdbcType=VARCHAR}
+            </if>
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="main.dao.domain.Student">
+        SELECT
+            id, sno, sname, password, cdate
+        FROM
+            library_student
+        where
+            yn = 1 and id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectBySno" resultMap="BaseResultMap" parameterType="main.dao.domain.Student">
+        SELECT
+            id, sno, sname, password, cdate
+        FROM
+            library_student
+        where
+            yn = 1 and sno = #{sno,jdbcType=INTEGER}
+    </select>
+
+</mapper>

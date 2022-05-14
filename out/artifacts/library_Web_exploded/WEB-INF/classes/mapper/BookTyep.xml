@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BookTypeMapper">
+
+    <resultMap id="BaseResultMap" type="main.dao.domain.BookType">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="tname" property="tname" jdbcType="VARCHAR"/>
+        <result column="cdate" property="cdate" jdbcType="TIMESTAMP"/>
+        <result column="udate" property="udate" jdbcType="TIMESTAMP"/>
+        <result column="yn" property="yn" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumnList">
+
+    </sql>
+
+    <insert id="insert" parameterType="main.dao.domain.BookType">
+        INSERT INTO library_book_type(
+            tname,
+            cdate,
+            yn
+        )VALUES(
+            #{tname,jdbcType=VARCHAR},
+            now(),
+            1
+        )
+    </insert>
+
+    <update id="update" parameterType="main.dao.domain.BookType">
+        UPDATE library_book_type
+        SET
+            tname = #{tname,jdbcType=VARCHAR},
+            udate = now()
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="delete" parameterType="main.dao.domain.BookType">
+        UPDATE library_book_type
+        SET
+            udate = now(),
+            yn = 0
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="main.dao.domain.BookType">
+        select
+            id,tname
+        from
+            library_book_type
+        where
+            yn = 1
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="tname != null and tname != ''">
+                and tname = #{tname,jdbcType=VARCHAR}
+            </if>
+    </select>
+
+</mapper>

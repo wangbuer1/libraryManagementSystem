@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BookMapper">
+
+    <resultMap id="BaseResultMap" type="main.dao.domain.Book">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="bno" property="bno" jdbcType="VARCHAR"/>
+        <result column="bname" property="bname" jdbcType="VARCHAR"/>
+        <result column="tid" property="tid" jdbcType="BIGINT"/>
+        <result column="tname" property="tname" jdbcType="VARCHAR"/>
+        <result column="author" property="author" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="NUMERIC"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="remain" property="remain" jdbcType="INTEGER"/>
+        <result column="brief" property="brief" jdbcType="VARCHAR"/>
+        <result column="cdate" property="cdate" jdbcType="TIMESTAMP"/>
+        <result column="udate" property="udate" jdbcType="TIMESTAMP"/>
+        <result column="yn" property="yn" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumnList">
+
+    </sql>
+
+    <insert id="insert" parameterType="main.dao.domain.Book">
+        INSERT INTO library_book(
+            bno,
+            bname,
+            tid,
+            author,
+            price,
+            total,
+            remain,
+            brief,
+            cdate,
+            yn
+        )VALUES(
+            #{bno,jdbcType=VARCHAR},
+            #{bname,jdbcType=VARCHAR},
+            #{tid,jdbcType=INTEGER},
+            #{author,jdbcType=VARCHAR},
+            #{price,jdbcType=NUMERIC},
+            #{total,jdbcType=VARCHAR},
+            #{remain,jdbcType=VARCHAR},
+            #{brief,jdbcType=VARCHAR},
+            now(),
+            1
+            );
+    </insert>
+
+    <update id="update" parameterType="main.dao.domain.Book">
+        UPDATE library_book
+        SET
+            bname = #{bname,jdbcType=VARCHAR},
+            tid = #{tid,jdbcType=INTEGER},
+            author = #{author,jdbcType=VARCHAR},
+            price = #{price,jdbcType=NUMERIC},
+            total = #{total,jdbcType=VARCHAR},
+            remain = #{remain,jdbcType=VARCHAR},
+            brief = #{brief,jdbcType=VARCHAR},
+            udate = now()
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateRemain" parameterType="main.dao.domain.Book">
+        UPDATE library_book
+        SET
+            remain = #{remain,jdbcType=VARCHAR},
+            udate = now()
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="delete" parameterType="main.dao.domain.Book">
+        UPDATE library_book
+        SET
+            udate = now(),
+            yn = 0
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="main.dao.domain.Book">
+        SELECT
+            b.id,b.bno,b.bname,b.tid,b.author,b.price,b.total,b.remain,b.brief
+        FROM
+            library_book b
+        where
+            b.yn = 1 and b.id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByBno" resultMap="BaseResultMap" parameterType="main.dao.domain.Book">
+        SELECT
+            b.id,b.bno,b.bname,b.tid,b.author,b.price,b.total,b.remain,b.brief
+        FROM
+            library_book b
+        where
+            b.yn = 1 and b.bno = #{bno,jdbcType=VARCHAR}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="main.dao.domain.Book">
+        SELECT
+            b.id,b.bno,b.bname,b.tid,t.tname,b.author,b.price,b.total,b.remain,b.cdate
+        FROM library_book b
+            LEFT JOIN library_book_type t
+                ON t.yn = 1 and b.tid = t.id
+        WHERE
+            b.yn = 1
+            <if test="id != null and id != ''">
+                and b.id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="bno != null and bno != ''">
+                and b.bno = #{bno,jdbcType=VARCHAR}
+            </if>
+            <if test="bname != null and bname != ''">
+                and b.bname = #{bname,jdbcType=VARCHAR}
+            </if>
+            <if test="tid != null and tid != ''">
+                and b.tid = #{tid,jdbcType=INTEGER}
+            </if>
+        ORDER BY b.id DESC
+    </select>
+
+</mapper>

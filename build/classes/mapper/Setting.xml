@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SettingMapper">
+
+    <resultMap id="BaseResultMap" type="main.dao.domain.Setting">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="value" property="value" jdbcType="INTEGER"/>
+        <result column="cdate" property="cdate" jdbcType="TIMESTAMP"/>
+        <result column="udate" property="udate" jdbcType="TIMESTAMP"/>
+        <result column="yn" property="yn" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumnList">
+
+    </sql>
+
+    <update id="update" parameterType="main.dao.domain.Setting">
+        UPDATE library_setting
+        SET
+            value = #{value,jdbcType=VARCHAR},
+            udate = now()
+        WHERE
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="main.dao.domain.Setting">
+        select
+            id, name, value
+        from library_setting
+        where yn = 1
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="main.dao.domain.Setting">
+        select
+            id, name, value
+        from library_setting
+        where yn = 1 and id = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>
